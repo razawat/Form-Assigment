@@ -1,0 +1,211 @@
+<mat-card>
+    <!-- Header -->
+  <mat-card-header>
+    <h4 class="badge text-bg-info">
+      {{ pageLabels.header }}
+    </h4>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <!-- Content -->
+  <mat-card-content>
+    <form class="mt-3" #f="ngForm" (ngSubmit)="onSubmitButtonClick(f)">
+      <div class="row mb-2">
+        <!-- First Name -->
+        <div class="col">
+          <mat-form-field [ngClass]="customStyles.w1">
+            <mat-label>{{ pageLabels.firstName }}</mat-label>
+            <input
+              matInput
+              [placeholder]="pageLabels.firstName"
+              required="true"
+              name="firstName"
+              ngModel
+              #fname="ngModel"
+            />
+            <mat-error
+              *ngIf="
+                (f.submitted && fname.invalid) || (f.touched && fname.invalid)
+              "
+            >
+              {{ errorLabel.requiredFieeld }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <!-- Last Name -->
+        <div class="col">
+          <mat-form-field [ngClass]="customStyles.w1">
+            <mat-label>{{ pageLabels.lastName }}</mat-label>
+            <input
+              matInput
+              [placeholder]="pageLabels.lastName"
+              name="lastName"
+              ngModel
+              #lname="ngModel"
+              required="true"
+            />
+            <mat-error
+              *ngIf="
+                (f.submitted && lname.invalid) || (f.touched && lname.invalid)
+              "
+              >{{ errorLabel.requiredFieeld }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <!-- Email -->
+        <div class="col">
+          <mat-form-field [ngClass]="customStyles.w1">
+            <mat-label>{{ pageLabels.email }}</mat-label>
+            <input
+              matInput
+              [placeholder]="pageLabels.email"
+              name="email"
+              ngModel
+              #email="ngModel"
+              required="true"
+              email
+            />
+            <mat-error>
+              <span
+                *ngIf="
+                  (f.submitted && email.hasError('required')) ||
+                  (f.touched && email.hasError('required'))
+                "
+              >
+                {{ errorLabel.requiredFieeld }}
+              </span>
+              <span *ngIf="f.touched && email.hasError('email')">
+                {{ errorLabel.emailRequired }}
+              </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <!-- Mobile No -->
+        <div class="col">
+          <mat-form-field [ngClass]="customStyles.w1">
+            <mat-label>{{ pageLabels.mobNo }}</mat-label>
+            <input
+              matInput
+              [placeholder]="pageLabels.mobNo"
+              ngModel
+              name="mobNo"
+              #mobNo="ngModel"
+              required="true"
+              [maxlength]="mobileNoLength"
+              [minlength]="mobileNoLength"
+              (input)="onEnterMobNo($event)"
+            />
+            <mat-error>
+              <span
+                *ngIf="
+                  (f.submitted && mobNo.hasError('required')) ||
+                  (f.touched && mobNo.hasError('required'))
+                "
+                >{{ errorLabel.requiredFieeld }}</span
+              >
+              <span *ngIf="mobNo.dirty && mobNo.hasError('minlength')">{{
+                errorLabel.mobNoRequired
+              }}</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <!-- Position -->
+        <div class="col">
+          <mat-form-field [ngClass]="customStyles.w1">
+            <mat-label>{{ pageLabels.position }}</mat-label>
+            <mat-select
+              [placeholder]="pageLabels.position"
+              name="position"
+              ngModel
+              #position="ngModel"
+              required="true"
+            >
+              <mat-option *ngFor="let item of positions" [value]="item">
+                {{ item }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                (f.submitted && position.invalid) ||
+                (f.touched && position.invalid)
+              "
+              >{{ errorLabel.requiredFieeld }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <!-- Date of joining -->
+        <div class="col">
+          <mat-form-field [ngClass]="customStyles.w1">
+            <mat-label>{{ pageLabels.doj }}</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [placeholder]="pageLabels.doj"
+              [max]="maxDate"
+              name="doj"
+              ngModel
+              #doj="ngModel"
+              required="true"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error
+              *ngIf="(f.submitted && doj.invalid) || (f.touched && doj.invalid)"
+              >{{ errorLabel.requiredFieeld }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <!-- Address -->
+        <div class="col">
+          <mat-form-field [ngClass]="customStyles.w2">
+            <mat-label>{{ pageLabels.address }}</mat-label>
+            <textarea
+              matInput
+              [placeholder]="pageLabels.address"
+              name="address"
+              ngModel
+              #address="ngModel"
+              required="true"
+            ></textarea>
+            <mat-error
+              *ngIf="
+                (f.submitted && address.invalid) || (f.touched && address.invalid)
+              "
+              >{{ errorLabel.requiredFieeld }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div>
+          <button
+            type="button"
+            mat-raised-button
+            color="primary"
+            (click)="onResetButtonClick(f)"
+          >
+            {{ pageLabels.reset }}
+          </button>
+        </div>
+        <div style="margin-left: 1rem">
+          <button type="submit" mat-raised-button color="primary">
+            {{ pageLabels.submit }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- To show form input data after submit -->
+<div *ngIf="showData">
+  <p *ngFor="let item of formValue | keyvalue">
+    {{ pageLabels[item.key] }} :{{ item.value }}
+  </p>
+</div>
